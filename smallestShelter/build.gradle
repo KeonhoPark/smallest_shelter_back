@@ -24,6 +24,11 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// DB
+	runtimeOnly ('mysql:mysql-connector-java') //mysql8
+	implementation ('org.springframework.boot:spring-boot-starter-jdbc')
+	// compile('org.springframework.boot:spring-boot-starter-data-jpa') //mysql 5버전의 경우 삭제.
 }
 
 tasks.named('test') {
