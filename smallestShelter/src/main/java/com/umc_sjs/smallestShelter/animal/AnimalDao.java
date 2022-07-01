@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AnimalDao {
 
-    private
+    private String
 }
