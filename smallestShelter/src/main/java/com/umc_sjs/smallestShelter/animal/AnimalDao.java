@@ -1,8 +1,6 @@
 package com.umc_sjs.smallestShelter.animal;
 
-import com.umc_sjs.smallestShelter.animal.model.Animal;
-import com.umc_sjs.smallestShelter.animal.model.GetDetailRes;
-import com.umc_sjs.smallestShelter.animal.model.Img;
+import com.umc_sjs.smallestShelter.animal.model.*;
 import com.umc_sjs.smallestShelter.model.GetAnimalRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Locale;
 
 @Repository
 public class AnimalDao {
@@ -83,4 +80,28 @@ public class AnimalDao {
                 );
     }
 
+    //동물 정보 등록
+    public PostAnimalRes insertAnimal(PostAnimalReq req){
+        //동물 정보 등록
+        String insertQuery = "insert into animal (name, age, organization, socialization, anxiety, train, bark, bite, mainImgUrl, species) values (?,?,?,?,?,?,?,?,?,?)";
+        Object[] insertParms = new Object[]{req.getName(), req.getAge(), req.getOrganization(), req.getSocialization(), req.getAnxiety(), req.getTrain(), req.getBark(), req.getBite(), req.getMainImg(), req.getSpecies()};
+
+        this.jdbcTemplate.update(insertQuery, insertParms);
+
+        //동물 인덱스 얻기
+        String getIdxQuery = "select last_insert_id()";
+        int anmIdx;
+
+        anmIdx = this.jdbcTemplate.queryForObject(getIdxQuery, int.class);
+
+        //질병 등록하기
+        String illnessQuery = "insert into illness (anmIdx, illness) values (?,?)";
+        Object[] illnessParms;
+        for(int i=0; i<req.getIllness().size(); i++){
+            illnessParms = new Object[]{anmIdx, req.getIllness().get(i)};
+            this.jdbcTemplate.update(illnessQuery, illnessParms);
+        }
+
+        return new PostAnimalRes(anmIdx);
+    }
 }

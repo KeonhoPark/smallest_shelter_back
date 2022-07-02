@@ -1,6 +1,8 @@
 package com.umc_sjs.smallestShelter.animal;
 
 import com.umc_sjs.smallestShelter.animal.model.GetDetailRes;
+import com.umc_sjs.smallestShelter.animal.model.PostAnimalReq;
+import com.umc_sjs.smallestShelter.animal.model.PostAnimalRes;
 import com.umc_sjs.smallestShelter.model.GetAnimalRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +53,15 @@ public class AnimalService {
     public List<GetAnimalRes> retrieveAnimals(){
         List<GetAnimalRes> animalResList = animalDao.selectAnimals();
         return animalResList;
+    }
+
+    //동물 정보 등록
+    public PostAnimalRes insertAnimal(PostAnimalReq postAnimalReq){
+        try{
+            return animalDao.insertAnimal(postAnimalReq);
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

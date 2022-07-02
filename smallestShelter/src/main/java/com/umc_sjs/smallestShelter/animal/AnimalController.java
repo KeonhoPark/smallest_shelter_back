@@ -1,6 +1,8 @@
 package com.umc_sjs.smallestShelter.animal;
 
 import com.umc_sjs.smallestShelter.animal.model.GetDetailRes;
+import com.umc_sjs.smallestShelter.animal.model.PostAnimalReq;
+import com.umc_sjs.smallestShelter.animal.model.PostAnimalRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://hana-umc.shop")
 @RestController
 @RequestMapping("")
 public class AnimalController {
@@ -22,6 +25,7 @@ public class AnimalController {
     @Autowired
     public AnimalController(AnimalService animalService) {
         this.animalService = animalService;
+        System.out.println("빌드 성공");
     }
 
     @ResponseBody
@@ -44,6 +48,31 @@ public class AnimalController {
     public List<GetAnimalRes> getAnimals(){
         List<GetAnimalRes> animalResList = animalService.retrieveAnimals();
         return animalResList;
+    }
+
+    /*
+        test api
+        스트링 문자열 하나 리턴됨.
+     */
+
+    @ResponseBody
+    @PostMapping("/test")
+    public String test(){
+        System.out.println("테스트 요청 성공");
+        return "hello umc sjs";
+    }
+
+    //동물 정보 등록
+    @ResponseBody
+    @PostMapping("/new")
+    public PostAnimalRes createAnimal(@RequestBody PostAnimalReq postAnimalReq){
+        try{
+            System.out.println("동물 정보 등록");
+            return animalService.insertAnimal(postAnimalReq);
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
