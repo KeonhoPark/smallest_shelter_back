@@ -63,10 +63,6 @@ public class AnimalDao {
                 checkUserExistParams);
 
     }
-    @Autowired
-    public void setDataSource(DataSource dataSource){
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     /**
      * selectAnimalQuery 쿼리문을 이용하여 jdbc 템플릿을 통해 GetAnimalRes 모델에 데이터 넣어짐
