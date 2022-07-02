@@ -169,7 +169,7 @@ public class AnimalDao {
         anmIdx = this.jdbcTemplate.queryForObject(getIdxQuery, int.class);
 
         //질병 등록하기
-        String illnessQuery = "insert into illness (anmIdx, illness) values (?,?)";
+        String illnessQuery = "insert into illness (anmIdx, illnessName) values (?,?)";
         Object[] illnessParms;
         for(int i=0; i<req.getIllness().size(); i++){
             illnessParms = new Object[]{anmIdx, req.getIllness().get(i)};
