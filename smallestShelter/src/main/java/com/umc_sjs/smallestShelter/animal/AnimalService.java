@@ -51,13 +51,8 @@ public class AnimalService {
      * @return List<GetAnimalRes>
      */
     public List<GetAnimalRes> retrieveAnimals(){
-        try {
-            List<GetAnimalRes> animalResList = animalDao.selectAnimals();
-            return animalResList;
-        } catch (Exception exception){
-            System.out.println("exception = " + exception);
-            return null;
-        }
+        List<GetAnimalRes> animalResList = animalDao.selectAnimals();
+        return animalResList;
     }
 
     //동물 정보 등록

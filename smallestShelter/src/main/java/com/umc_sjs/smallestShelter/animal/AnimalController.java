@@ -46,7 +46,6 @@ public class AnimalController {
      */
     @GetMapping("/list")
     public List<GetAnimalRes> getAnimals(){
-        System.out.println("목록 리스트 출력");
         List<GetAnimalRes> animalResList = animalService.retrieveAnimals();
         return animalResList;
     }
