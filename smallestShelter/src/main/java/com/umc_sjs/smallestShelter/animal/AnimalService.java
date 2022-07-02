@@ -27,9 +27,12 @@ public class AnimalService {
             GetDetailRes getDetailRes = animalDao.selectAnimalDetail(anmIdx);
             System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!Service" + getDetailRes);
 
+            System.out.println("getDetailRes = " + getDetailRes);
             return getDetailRes;
         }
         catch (Exception exception) {
+            System.out.println("AnimalService.retrieveAnimalDetail");
+            System.out.println("exception = " + exception);
             return null;
         }
     }
