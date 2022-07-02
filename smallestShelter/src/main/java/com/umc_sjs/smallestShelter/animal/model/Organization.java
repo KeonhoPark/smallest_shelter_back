@@ -2,7 +2,7 @@ package com.umc_sjs.smallestShelter.animal.model;
 
 public enum Organization {
 
-    GROUP("임시보호단체"),
+    GROUP("임보단체"),
     SINGLE("개인");
 
     private final String value;

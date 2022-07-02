@@ -23,13 +23,13 @@ public class Animal {
 //    private Gender gender;
 //    private String species;
 //    private List<String> illness;
-    private String organization;
-    private String socialization;
-    private String anxiety;
-    private String train;
-    private String bark;
-    private String bite;
-    private String gender;
+    private Organization organization;
+    private Status socialization;
+    private Status anxiety;
+    private Status train;
+    private Status bark;
+    private Status bite;
+    private Gender gender;
     private String species;
-    private String illness;
+
 }

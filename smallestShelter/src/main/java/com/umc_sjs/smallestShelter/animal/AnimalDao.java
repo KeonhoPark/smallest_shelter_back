@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -22,35 +23,108 @@ public class AnimalDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public GetDetailRes selectAnimalDetail(int idx){
-        String selectPostsQuery = "SELECT mainImgUrl, name, age, organization, socialization, anxiety, train, bark, bite, gender, species, illness from animal where anmIdx = ?;";
-        int selectGetsParam = idx;
-        // 객체는 queryForObject, 리스트 형태는 query
-        return this.jdbcTemplate.queryForObject(selectPostsQuery,
-                (rs,rowNum) -> new GetDetailRes(
-                        detail = this.jdbcTemplate.queryForObject("SELECT mainImgUrl, name, age, organization, socialization, anxiety, train, bark, bite, gender, species, illness from animal where anmIdx = ?;",
-                                (rk1, rowNum1) -> new Animal(
-                                        rk1.getString("mainImgUrl"),
-                                        rk1.getString("name"),
-                                        rk1.getString("age"),
-                                        rk1.getString("organization"),
-                                        rk1.getString("socialization"),
-                                        rk1.getString("anxiety"),
-                                        rk1.getString("train"),
-                                        rk1.getString("bark"),
-                                        rk1.getString("bite"),
-                                        rk1.getString("gender"),
-                                        rk1.getString("species"),
-                                        rk1.getString("illness")
-                                ), rs.getInt("idx") // 파라미터 자리 = ? 안에 들어갈 것
-                        ),
-                        imgList = this.jdbcTemplate.query("SELECT imgUrl from image where anmIdx = ?;",
-                                (rk2, rowNum2) -> new Img(
-                                        rk2.getString("imgUrl")
-                                ), rs.getInt("idx") // 파라미터 자리 = ? 안에 들어갈 것
-                        )
-                ), selectGetsParam);
+    /*public GetDetailRes selectAnimalDetail(int animalIndex) {
+        GetDetailRes getDetailRes = new GetDetailRes()
+        String getAnimalQuery = "select name, age, socialization, anxiety, train, bark, bite, mainImgUrl, gender, species, organization\n" +
+                "from animal where anmIdx = ?";
+        int index = animalIndex;
+        Animal animal = this.jdbcTemplate.queryForObject(getAnimalQuery,
+                (rs, rowNum) -> new Animal(
+                        rs.getString("mainImgUrl"),
+                        rs.getString("name"),
+                        rs.getString("age"),
+                        Organization.valueOf(rs.getString("organization")),
+                        Status.valueOf(rs.getString("socialization")),
+                        Status.valueOf(rs.getString("anxiety")),
+                        Status.valueOf(rs.getString("train")),
+                        Status.valueOf(rs.getString("bark")),
+                        Status.valueOf(rs.getString("bite")),
+                        Gender.valueOf(rs.getString("gender")),
+                        rs.getString("species")),
+                index);
+        
+    }*/
+
+    public GetDetailRes selectAnimalDetail(int animalIndex) {
+        Animal animalModel = getAnimalModel(animalIndex);
+        List<String> imgList = getImgList(animalIndex);
+        List<String> illnessList = getIllnessList(animalIndex);
+
+        return new GetDetailRes(animalModel, imgList, illnessList);
+
     }
+
+    public Animal getAnimalModel(int animalIndex){
+        String getAnimalQuery = "select name, age, socialization, anxiety, train, bark, bite, mainImgUrl, gender, species, organization\n" +
+                "from animal where anmIdx = ?";
+        int index = animalIndex;
+        return this.jdbcTemplate.queryForObject(getAnimalQuery,
+                (rs, rowNum) -> new Animal(
+                        rs.getString("mainImgUrl"),
+                        rs.getString("name"),
+                        rs.getString("age"),
+                        Organization.valueOf(rs.getString("organization")),
+                        Status.valueOf(rs.getString("socialization")),
+                        Status.valueOf(rs.getString("anxiety")),
+                        Status.valueOf(rs.getString("train")),
+                        Status.valueOf(rs.getString("bark")),
+                        Status.valueOf(rs.getString("bite")),
+                        Gender.valueOf(rs.getString("gender")),
+                        rs.getString("species")),
+                index);
+    }
+
+    public List<String> getImgList(int animalIndex){
+        String getImagesQuery = "select imgUrl from image where anmIdx = ?";
+        int index = animalIndex;
+        List<String> imgUrlList = new ArrayList<>();
+
+        List<Img> imgList = this.jdbcTemplate.query(getImagesQuery,
+                (rs, rowNum) -> new Img(
+                        rs.getString("imgUrl")), index);
+
+        for (Img img : imgList) {
+            imgUrlList.add(img.getImgUrl());
+        }
+        return imgUrlList;
+    }
+
+    public List<String> getIllnessList(int animalIndex){
+        String getIllnessQuery = "select anmIdx, illnessName from illness where anmIdx = ?";
+        int index = animalIndex;
+        List<String> illnessNameList = new ArrayList<>();
+
+        List<Illness> illnessList = this.jdbcTemplate.query(getIllnessQuery,
+                (rs, rowNum) -> new Illness(
+                        rs.getInt("anmIdx"),
+                        rs.getString("illnessName")), index);
+
+        for (Illness illness : illnessList) {
+            illnessNameList.add(illness.getIllness());
+        }
+        return illnessNameList;
+    }
+
+    public Animal getAnimal(int animalIndex){
+        String getAnimalQuery = "select name, age, socialization, anxiety, train, bark, bite, mainImgUrl, gender, species, organization\n" +
+                "from animal where anmIdx = ?";
+        int index = animalIndex;
+        return this.jdbcTemplate.queryForObject(getAnimalQuery,
+                (rs, rowNum) -> new Animal(
+                        rs.getString("mainImgUrl"),
+                        rs.getString("name"),
+                        rs.getString("age"),
+                        Organization.valueOf(rs.getString("organization")),
+                        Status.valueOf(rs.getString("socialization")),
+                        Status.valueOf(rs.getString("anxiety")),
+                        Status.valueOf(rs.getString("train")),
+                        Status.valueOf(rs.getString("bark")),
+                        Status.valueOf(rs.getString("bite")),
+                        Gender.valueOf(rs.getString("gender")),
+                        rs.getString("species")),
+                index);
+    }
+
 
     public int checkAnimalExist(int anmIdx){
         String checkUserExistQuery = "select exists(select anmIdx from animal where anmIdx = ?)";
